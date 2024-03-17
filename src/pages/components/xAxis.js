@@ -14,9 +14,9 @@ const XAxis = ({ xScale, height, axisLabel }) => {
       {/* Optional Axis Label */}
       {axisLabel && (
         <text
-          style={{ textAnchor: "middle", fontSize: '10px' }}
-          transform={`translate(${xScale.range()[1] / 2}, ${height + 40})`}  // Adjusted for better visibility
-        >
+        style={{ textAnchor: "middle", fontSize: '15px' }}
+        transform={`translate(490,-20) rotate(0) `} // Adjust the 40px offset as needed
+              >
           {axisLabel}
         </text>
       )}

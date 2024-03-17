@@ -1,7 +1,7 @@
 import React from 'react';
-import Bars from './components/bars'; // Ensure this path is correct
-import XAxis from './components/xAxis'; // Adjust the path as necessary
-import YAxis from './components/yAxis'; // Adjust the path as necessary
+import Bars from './bars'; // Assuming this path is correct
+import YAxis from './YAxis'; // Adjust the path as necessary
+import XAxis from './XAxis'; // Adjust the path as necessary
 
 function BarChart({ offsetX, offsetY, data, xScale, yScale, height, width, selectedStation, setSelectedStation }) {
     return (

@@ -1,7 +1,8 @@
 import React from 'react';
-import Points from './components/points'; // Assuming this path is correct
-import YAxis from './components/yAxis'; // Adjust the path as necessary
-import XAxis from './components/xAxis'; // Adjust the path as necessary
+
+import Points from './Points'; // Assuming this path is correct
+import YAxis from './YAxis'; // Adjust the path as necessary
+import XAxis from './XAxis'; // Adjust the path as necessary
 
 // Updated function signature to accept the additional props
 function ScatterPlot({ offsetX, offsetY, data, xScale, yScale, height, width, selectedStation, setSelectedStation, setTooltipX, setTooltipY }) {

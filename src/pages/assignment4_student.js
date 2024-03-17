@@ -1,10 +1,9 @@
 
 import React, {useState} from 'react';
-import * as d3 from "d3";
+import * as d3 from "d3"
 import {scaleBand, scaleLinear, max } from 'd3';
-import 'bootstrap/dist/css/bootstrap.css';
-import { Row, Col, Container} from 'react-bootstrap';
-
+import 'bootstrap/dist/css/bootstrap.css'
+import { Row, Col, Container} from 'react-bootstrap'
 import ScatterPlot from './components/scatterPlot'
 import BarChart from './components/barChart'
 import Tooltip from './components/tooltips'
