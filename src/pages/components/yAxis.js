@@ -1,23 +1,31 @@
+import React from 'react';
 
+const YAxis = ({ yScale, height, axisLabel, offsetX }) => {
+    if (yScale) {
+        const ticks = yScale.ticks(); // Using ticks for the Y-axis
 
-
-function YAxis(props){
-    const { yScale, height, axisLable } = props;
-    if(yScale){
-        return <g>
-            
-        {/* //the if(yScale){...} means when xScale is not null, the component will return the y-axis; otherwise, it returns <g></g>
-        //we use the if ... else ... in this place so that the code can work with the SSR in Next.js;
-        //all your code should be put in this block. Remember to use typeof check if the xScale is linear or discrete. */}
-   
-            <text style={{ textAnchor:'end', fontSize:'15px'}} transform={`translate(20, 0)rotate(-90)`}>
-                {axisLable}
-            </text>
-        </g>
+        return (
+            <g transform={`translate(${offsetX}, 0)`}>
+                {/* Y-axis line */}
+                <line x1={0} y1={0} x2={0} y2={height} stroke="black" />
+                {/* Axis label */}
+                <text style={{ textAnchor: "end", fontSize: '15px' }} transform={`translate(15,3)rotate(-90)`}>
+                    {axisLabel}
+                </text>
+                {/* Y-axis ticks */}
+                {ticks.map((tick, index) => (
+                    <g key={index} transform={`translate(0, ${yScale(tick)})`}>
+                        <line x1={0} y1={0} x2={-6} y2={0} stroke="black" />
+                        <text style={{ textAnchor: 'end', fontSize: '8px' }} transform={`translate(-10, 4)`}>
+                            {tick}
+                        </text>
+                    </g>
+                ))}
+            </g>
+        );
     } else {
-        return <g></g>
+        return null;
     }
+};
 
-}
-
-export default YAxis
+export default YAxis;

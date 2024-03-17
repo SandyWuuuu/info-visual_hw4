@@ -1,36 +1,61 @@
-//`<XAxis />` has the following properties,
-// - xScale: the scale of the x-axis
-// - height: the height of the scatter plot
-// - width: the width of the scatter plot
-// - axisLabel: the name of the axis
-// - `<YAxis />` has the following properties,
-// - yScale: the scale of y-axis
-// - height: the height of the scatter plot
-// - axisLabel: the name of the axis
-// - **`<Points />`**: it is defined in the module points.js. The radius of each `<circle />` is 5 and the color is `steelblue`, and the `<Points />` has the following properties,
-// - data: the data items
-// - xScale: the scale for the x coordinate
-// - yScale: the scale for the y coordinate
+import { RouteMatcher } from 'next/dist/server/future/route-matchers/route-matcher';
+import React from 'react';
 
+// A more flexible XAxis component that can handle both band and linear scales.
+const XAxis = ({ xScale, height, axisLabel }) => {
+  // Determine if the scale is a band scale by checking for the existence of .bandwidth() function
+  const isBandScale = xScale.bandwidth !== undefined;
 
+  return (
+    <g transform={`translate(0,${height})`}>
+      {/* Axis Line */}
+      <line x1={0} y1={0} x2={xScale.range()[1]} y2={0} stroke="black" />
 
+      {/* Optional Axis Label */}
+      {axisLabel && (
+        <text
+          style={{ textAnchor: "middle", fontSize: '10px' }}
+          transform={`translate(${xScale.range()[1] / 2}, 40)`} // Adjusted for better visibility
+        >
+          {axisLabel}
+        </text>
+      )}
 
-function XAxis(props){
-    const { xScale, height, width, axisLable } = props;
-    //Note:
-    //1. XAxis works for two cases: the xScale is linear (i.e., scatter plot) and the xScalse is discrete (i.e., bar chart)
-    //2. you can use typeof(xScale.domain()[0]) to decide the return value
-    //3. if typeof(xScale.domain()[0]) is a number, xScale is a linear scale; if it is a string, it is a scaleBand.
-    
-    if(xScale) {
-        return <g>
-        {/* //the if(xScale){...} means when xScale is not null, the component will return the x-axis; otherwise, it returns <g></g>
-        //we use the if ... else ... in this place so that the code can work with the SSR in Next.js;
-        //all your code should be put in this block. Remember to use typeof check if the xScale is linear or discrete. */}
+      {/* Ticks and Labels */}
+      {xScale.ticks ? xScale.ticks().map((tickValue, index) => (
+        // For linear scales, use ticks() method to generate tick values.
+        // This provides better control over the number of ticks and their distribution.
+        <g key={index} transform={`translate(${xScale(tickValue)}, 0)`}>
+          <line y1={0} y2={6} stroke="black" />
+          <text
+            style={{ textAnchor: 'middle', fontSize: '10px' }}
+            dy=".10em"
+            y={9}
+            x={0}
+            transform="rotate(-45)"
+          >
+            {tickValue}
+          </text>
         </g>
-    }else {
-    return <g></g>
-}
-}
+      )) : xScale.domain().map((tickValue, index) => (
+        // For band scales, directly use domain() for tick values.
+        // Position ticks in the center of each band.
+        <g key={index} transform={`translate(${xScale(tickValue) + (isBandScale ? xScale.bandwidth() / 2 : 0)}, 0)`}>
+          <line y1={0} y2={6} stroke="black" />
+          <text
+            style={{ textAnchor: 'initial', fontSize: '10px' }}
+            dy=".6em"
+            dx = "1.6em"
+            y={12}
+            x={17}
+            transform = "rotate(85)"
+          >
+            {tickValue}
+          </text>
+        </g>
+      ))}
+    </g>
+  );
+};
 
-export default XAxis
+export default XAxis;

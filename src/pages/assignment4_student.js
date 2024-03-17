@@ -1,12 +1,12 @@
 
-import React from 'react'
+import React, { useRef } from 'react';
 import * as d3 from "d3"
+import {scaleBand, scaleLinear, max } from 'd3';
 import 'bootstrap/dist/css/bootstrap.css'
 import { Row, Col, Container} from 'react-bootstrap'
 import ScatterPlot from './components/scatterPlot'
 import BarChart from './components/barChart'
 import Tooltip from './components/tooltips'
-
 
 const csvUrl = 'https://gist.githubusercontent.com/hogwild/3b9aa737bde61dcb4dfa60cde8046e04/raw/citibike2020.csv'
 
@@ -58,8 +58,15 @@ const Charts = () => {
 
 //Q1.2: Complete the xScaleBar and yScaleBar
 //Hint: use d3.scaleBand for xScaleBar
-    const xScaleBar = []
-    const yScaleBar = []
+const xScaleBar = scaleBand()
+    .domain(data.map(d => d.station)) // stations as categories
+    .range([0, innerWidth]) // Set the range from 0 to the width of the chart
+    .padding(0.1);
+
+const yScaleBar = scaleLinear()
+    .domain([0, d3.max(data, d => d.start)])
+    .range([innerHeightBar, 0]) // Height goes from bottom to top
+    .nice();
 
     const changeHandler = (event) => {
         setMonth(event.target.value);
