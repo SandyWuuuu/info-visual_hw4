@@ -15,7 +15,7 @@ const XAxis = ({ xScale, height, axisLabel }) => {
       {axisLabel && (
         <text
           style={{ textAnchor: "middle", fontSize: '10px' }}
-          transform={`translate(${xScale.range()[1] / 2}, 40)`} // Adjusted for better visibility
+          transform={`translate(${xScale.range()[1] / 2}, ${height + 40})`}  // Adjusted for better visibility
         >
           {axisLabel}
         </text>
@@ -40,14 +40,14 @@ const XAxis = ({ xScale, height, axisLabel }) => {
       )) : xScale.domain().map((tickValue, index) => (
         // For band scales, directly use domain() for tick values.
         // Position ticks in the center of each band.
-        <g key={index} transform={`translate(${xScale(tickValue) + (isBandScale ? xScale.bandwidth() / 2 : 0)}, 0)`}>
+        <g key={index} transform={`translate(${xScale(tickValue) + xScale.bandwidth() / 2}, 0)`}>
           <line y1={0} y2={6} stroke="black" />
           <text
             style={{ textAnchor: 'initial', fontSize: '10px' }}
-            dy=".6em"
-            dx = "1.6em"
-            y={12}
-            x={17}
+            dy=".5em"
+            dx = "0.6em"
+            y={-1}
+            x={0}
             transform = "rotate(85)"
           >
             {tickValue}
