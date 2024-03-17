@@ -1,15 +1,22 @@
 import React from 'react';
-import Bars from './Bars';
-import XAxis from './XAxis';
-import YAxis from './YAxis';
+import Bars from './Bars'; // Ensure this path is correct
+import XAxis from './XAxis'; // Adjust the path as necessary
+import YAxis from './YAxis'; // Adjust the path as necessary
 
-function BarChart(props){
-    const { offsetX, offsetY, data, xScale, yScale, height, width} = props;
+function BarChart({ offsetX, offsetY, data, xScale, yScale, height, width, selectedStation, setSelectedStation }) {
     return (
         <g transform={`translate(${offsetX},${offsetY})`}>
-            <Bars data={data} xScale={xScale} yScale={yScale} height={height}/>
+            {/* Pass selectedStation and setSelectedStation to Bars */}
+            <Bars
+                data={data}
+                xScale={xScale}
+                yScale={yScale}
+                height={height}
+                selectedStation={selectedStation}
+                setSelectedStation={setSelectedStation}
+            />
             <YAxis yScale={yScale} height={height} axisLabel={"Bikers start from"}/>
-            <XAxis xScale={xScale} height={height} width={width}  /> 
+            <XAxis xScale={xScale} height={height} width={width} /> 
         </g>
     );
 }

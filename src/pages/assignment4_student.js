@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, {useState} from 'react';
 import * as d3 from "d3"
 import {scaleBand, scaleLinear, max } from 'd3';
 import 'bootstrap/dist/css/bootstrap.css'
@@ -30,7 +30,12 @@ const Charts = () => {
     const [month, setMonth] = React.useState('4');
     //Q1.5 define hooks to link the points and bars
     //Notes: you should define the hooks at the beginning of the component; a hook cannot be defined after the if ... else... statement;
-   
+   // Within the Charts component
+    const [selectedStation, setSelectedStation] = React.useState(null);
+    const [tooltipX, setTooltipX] = React.useState(null);
+    const [tooltipY, setTooltipY] = React.useState(null);
+    
+
     const dataAll = useData(csvUrl);
     if (!dataAll) {
         return <pre>Loading...</pre>;
@@ -83,17 +88,33 @@ const yScaleBar = scaleLinear()
             <Row className='justify-content-md-center'>
                 <Col>
                     <svg width={WIDTH} height={HEIGHT}>
-                        <ScatterPlot offsetX={margin.left} offsetY={margin.top} data={data} xScale={xScaleScatter} yScale={yScaleScatter} 
-                        height={innerHeightScatter} width={innerWidth}/>
+                        <ScatterPlot
+                              offsetX={margin.left} offsetY={margin.top}
+                              data={data} xScale={xScaleScatter} yScale={yScaleScatter}
+                              height={innerHeightScatter} width={innerWidth}
+                              selectedStation={selectedStation} setSelectedStation={setSelectedStation}
+                              setTooltipX={setTooltipX} setTooltipY={setTooltipY} // Pass the hooks to Points through ScatterPlot
+                              />
                     </svg>
                 </Col>
                 <Col>
                     <svg width={WIDTH} height={HEIGHT}>
-                        <BarChart offsetX={margin.left} offsetY={margin.top} data={data} xScale={xScaleBar} 
-                        yScale={yScaleBar} height={innerHeightBar} width={innerWidth}/>
+                        <BarChart
+                            offsetX={margin.left} offsetY={margin.top}
+                            data={data} xScale={xScaleBar}
+                            yScale={yScaleBar} height={innerHeightBar} width={innerWidth}
+                            selectedStation={selectedStation} setSelectedStation={setSelectedStation}
+                        />
                     </svg>
                 </Col>
             </Row>
+            {selectedStation && (
+    <Tooltip
+        d={data.find(d => d.station === selectedStation)}
+        x={tooltipX}
+        y={tooltipY}
+    />
+)}
             {/* Q1.6: add the Tooltip 
             1. you should get the selected pointed first and pass it to the <Tooltip />
             2. you should define the hooks for X and Y coordinates of the tooltip; 
@@ -105,4 +126,3 @@ const yScaleBar = scaleLinear()
 
 
 export default Charts
-

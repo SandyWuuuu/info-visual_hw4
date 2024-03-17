@@ -1,7 +1,7 @@
 function Tooltip(props) {
     const {d, x, y} = props;
     //console.log(d);
-    if (x === null|!d) {
+    if (x === null||!d) {
         return <div></div>;
     } else {
         const divStyle = {

@@ -1,45 +1,57 @@
 import React from 'react';
 
-function Points({ data, xScale, yScale, selectedStation, setSelectedStation }) {
+function Points({ data, xScale, yScale, selectedStation, setSelectedStation,setTooltipX, setTooltipY  }) {
     const getColor = (station) => station === selectedStation ? 'red' : 'steelblue';
-    const getRadius = (station) => station === selectedStation ? 10 : 5;
 
-    // Split data into selected and non-selected points for separate rendering
-    const nonSelectedPoints = data.filter(d => d.station !== selectedStation);
-    const selectedPoint = data.find(d => d.station === selectedStation);
+    // Enhance handleMouseEnter to prevent flickering by not resetting if already selected
+    const handleMouseEnter = (station, event) => {
+        if (station !== selectedStation) {
+            setSelectedStation(station);
+            setTooltipX(event.pageX);
+            setTooltipY(event.pageY);
+        }
+    };
+
+    // Introduce a slight delay before deselecting to improve user experience
+    // This delay helps to prevent accidental deselection if the user quickly moves between points
+    const handleMouseLeave = (station) => {
+        setTimeout(() => {
+            if (station === selectedStation) {
+                setSelectedStation(null);
+            }
+        }, 50); // Adjust the delay as needed for optimal user experience
+    };
 
     return (
         <g className="points">
-            {/* Render non-selected points */}
-            {nonSelectedPoints.map((d, index) => (
+            {data.map((d, index) => (
                 <circle
                     key={index}
                     cx={xScale(d.start)}
                     cy={yScale(d.end)}
-                    r={getRadius(d.station)}
+                    r={d.station === selectedStation ? 10 : 5}
                     fill={getColor(d.station)}
-                    onMouseEnter={() => setSelectedStation(d.station)}
-                    onMouseOut={() => setSelectedStation(null)}
+                    onMouseEnter={(event) => handleMouseEnter(d.station, event)}
+                    onMouseLeave={() => handleMouseLeave(d.station)}
                 />
             ))}
-            {/* Render yellow rectangle if a station is selected */}
+            {/* Conditionally render the yellow background and the selected point on top */}
             {selectedStation && (
                 <rect
                     x={0}
                     y={0}
-                    width="100%" 
-                    height="100%" // Adjust to your SVG's height
+                    width="100%"
+                    height="100%"
                     fill="yellow"
-                    fillOpacity="0.3" 
+                    fillOpacity="0.3"
                 />
             )}
-            {/* Render the selected point on top of the rectangle */}
-            {selectedPoint && (
+            {selectedStation && (
                 <circle
-                    cx={xScale(selectedPoint.start)}
-                    cy={yScale(selectedPoint.end)}
-                    r={10} 
-                    fill="red" 
+                    cx={xScale(data.find(d => d.station === selectedStation).start)}
+                    cy={yScale(data.find(d => d.station === selectedStation).end)}
+                    r={10}
+                    fill="red"
                 />
             )}
         </g>
